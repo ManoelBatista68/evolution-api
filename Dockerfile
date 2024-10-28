@@ -8,12 +8,15 @@ RUN apk update && apk upgrade && \
     apk add --no-cache git tzdata ffmpeg wget curl
 
 WORKDIR /evolution
+WORKDIR /usr/src/app
 
-COPY ./package.json .
+COPY package*.json ./
 
 RUN npm install
 
 COPY . .
+
+EXPOSE 3000
 
 RUN npm run build
 
@@ -179,4 +182,7 @@ WORKDIR /evolution
 
 COPY --from=builder /evolution .
 
+
 CMD [ "node", "./dist/src/main.js" ]
+
+CMD ["npm", "start"]

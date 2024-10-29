@@ -1,0 +1,37 @@
+services:
+  evolution-api:
+    container_name: evolution_api
+    image: atendai/evolution-api:v2.1.1
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis  # Adicionando dependência ao Redis
+    volumes:
+      - evolution_instances:/evolution/instances
+
+  db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha
+      POSTGRES_DB: evolution_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:  # Adicionando serviço Redis
+    image: redis:latest
+    container_name: redis_db
+    ports:
+      - "6379:6379"  # Porta padrão do Redis
+
+volumes:
+  evolution_instances:
+  postgres_data:
+
